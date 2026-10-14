@@ -25,6 +25,7 @@ export async function runRSIExperiment() {
 
   const ravenPath = path.resolve("sandbox/tools/raven");
   const ravenAvailable = fs.existsSync(ravenPath);
+  console.warn("Raven runtime not invoked; local microbenchmarks are NOT recursive self-improvement evidence.");
 
   // 1. Benchmark PQC Engine
   const pqcStart = performance.now();
@@ -75,6 +76,7 @@ export async function runRSIExperiment() {
     upstreamRepo: "https://github.com/EverMind-AI/Raven",
     pinnedCommit: "6b938a4267cb1f3bf1453a39ccc7d580e0eea9fd",
     sandboxAvailable: ravenAvailable,
+    actualRavenRSIExecuted: false,
     timestamp: new Date().toISOString(),
     metrics: {
       falseAcceptanceRate: (falseAcceptances / iterations) * 100, // 0.00%
