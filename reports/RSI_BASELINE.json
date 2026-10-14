@@ -1,0 +1,58 @@
+{
+  "framework": "Raven RSI Multi-Agent Engine",
+  "version": "0.2.4",
+  "upstreamRepo": "https://github.com/EverMind-AI/Raven",
+  "pinnedCommit": "6b938a4267cb1f3bf1453a39ccc7d580e0eea9fd",
+  "sandboxAvailable": true,
+  "timestamp": "2026-10-14T19:07:27.989Z",
+  "metrics": {
+    "falseAcceptanceRate": 0,
+    "falseRejectionRate": 0,
+    "pqcSignAndVerifyMs": 66.24389999999948,
+    "conwayAvgStepMs": 0.09179399999999077,
+    "agentPolicyEvaluationMs": 0.006063500000000204,
+    "qrParseAndValidateMs": 0.7965000000003783
+  },
+  "subagents": [
+    {
+      "name": "Research Agent",
+      "role": "Mezo & x402 Technical Protocol Research",
+      "status": "READY"
+    },
+    {
+      "name": "Code Agent",
+      "role": "Narrowly Scoped Patch Implementation",
+      "status": "READY"
+    },
+    {
+      "name": "Test Agent",
+      "role": "Lane 1 & Lane 2 Reality Test Execution",
+      "status": "READY"
+    },
+    {
+      "name": "Security Agent",
+      "role": "Budget & Threat Model Audit",
+      "status": "READY"
+    },
+    {
+      "name": "Mezo Agent",
+      "role": "Testnet RPC & MUSD State Verification",
+      "status": "READY"
+    },
+    {
+      "name": "PQC Agent",
+      "role": "NIST FIPS 204 ML-DSA Verification",
+      "status": "READY"
+    },
+    {
+      "name": "On-Call Agent",
+      "role": "Failure Triage & Minimal Hotfixes",
+      "status": "READY"
+    },
+    {
+      "name": "Independent Evaluation Agent",
+      "role": "Gate Threshold & Benchmark Auditing",
+      "status": "READY"
+    }
+  ]
+}

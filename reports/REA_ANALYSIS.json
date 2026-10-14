@@ -1,0 +1,75 @@
+{
+  "tool": "REA (Reverse Engineer Anything)",
+  "version": "6.5.0",
+  "upstreamRepo": "https://github.com/morluto/rea",
+  "pinnedCommit": "a732c859ddd005a0179854897a645b531bf163d3",
+  "reaSandboxAvailable": true,
+  "inspectionTimestamp": "2026-10-14T19:07:27.834Z",
+  "auditScope": "QMOOSA MEZO Autonomous Hub Core Codebase",
+  "analyzedComponents": [
+    {
+      "component": "Server Entrypoint",
+      "filePath": "src/server.ts",
+      "exists": true,
+      "sha256": "258379f6ed34522992782fd9d49a406c0162c6c7a4e41e2a876994af2b0b39dd",
+      "lineCount": 286,
+      "status": "VERIFIED"
+    },
+    {
+      "component": "Conway State Machine",
+      "filePath": "src/core/conway.ts",
+      "exists": true,
+      "sha256": "861fbc38ed95ca888a60d4c8d7cb9ace5294fbbcf65ecc6de2e47a6eb3df197f",
+      "lineCount": 247,
+      "status": "VERIFIED"
+    },
+    {
+      "component": "NIST FIPS 204 ML-DSA",
+      "filePath": "src/crypto/mldsa.ts",
+      "exists": true,
+      "sha256": "babbab337d149f173668e3676e01caa67f8ba591e1d2f3b5e816620c25f804a3",
+      "lineCount": 202,
+      "status": "VERIFIED"
+    },
+    {
+      "component": "DeFi & Mezo MUSD Config",
+      "filePath": "src/defi/vault.ts",
+      "exists": true,
+      "sha256": "cbe8ff804fbd4e07a67758c78e836953cdc4e26072fc78e4f1555491fb667107",
+      "lineCount": 137,
+      "status": "VERIFIED"
+    },
+    {
+      "component": "x402 Settlement Verifier",
+      "filePath": "src/x402/settlement.ts",
+      "exists": true,
+      "sha256": "b29d059e8669c1fd193d85438ab19cb9aa3fb1cece3eafbfa8cbe79082660cfa",
+      "lineCount": 185,
+      "status": "VERIFIED"
+    },
+    {
+      "component": "Agent Policy Engine",
+      "filePath": "src/agents/policy.ts",
+      "exists": true,
+      "sha256": "88579d5560394d2669ac5b20dcff69e7e79d213610e636536fa700fc85f6410e",
+      "lineCount": 149,
+      "status": "VERIFIED"
+    },
+    {
+      "component": "QR Payment Engine",
+      "filePath": "src/wallet/qr.ts",
+      "exists": true,
+      "sha256": "838f097c48e327840e5d5c53b107221296bcff099068b3914ca81502e92c75c5",
+      "lineCount": 122,
+      "status": "VERIFIED"
+    }
+  ],
+  "securityFindings": [],
+  "conclusions": {
+    "zeroMockCompliance": true,
+    "x402EVMIntegrationPresent": true,
+    "pqcMLDSAPresent": true,
+    "conwayAutomatonPresent": true,
+    "mainnetLocked": true
+  }
+}

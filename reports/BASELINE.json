@@ -1,0 +1,71 @@
+{
+  "project": "QMOOSA MEZO — Autonomous AI Payment & DeFi Hub",
+  "version": "4.0.0",
+  "targetReadiness": "100/100",
+  "auditDate": "2026-10-15T00:30:00Z",
+  "network": {
+    "name": "Mezo Testnet",
+    "caip2": "eip155:31611",
+    "chainId": 31611,
+    "chainIdHex": "0x7b7b",
+    "rpcUrl": "https://rpc.test.mezo.org",
+    "rpcStatus": "ONLINE",
+    "musdToken": "0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503",
+    "musdDecimals": 18,
+    "bytecodeVerified": true,
+    "bytecodeLength": 12876,
+    "facilitatorUrl": "https://facilitator.vativ.io",
+    "facilitatorStatus": "ONLINE",
+    "explorerUrl": "https://explorer.test.mezo.org"
+  },
+  "runtime": {
+    "node": "v24.18.0",
+    "npm": "11.16.0",
+    "typescript": "5.8.2",
+    "python": "3.14.6",
+    "uv": "0.11.28",
+    "git": "2.55.0.windows.3",
+    "platform": "win32 (x64)"
+  },
+  "subsystems": {
+    "rea": {
+      "upstream": "https://github.com/morluto/rea",
+      "version": "6.5.0",
+      "commit": "a732c859ddd005a0179854897a645b531bf163d3",
+      "sandbox": "sandbox/tools/rea",
+      "status": "VERIFIED"
+    },
+    "raven": {
+      "upstream": "https://github.com/EverMind-AI/Raven",
+      "version": "0.2.4",
+      "commit": "6b938a4267cb1f3bf1453a39ccc7d580e0eea9fd",
+      "sandbox": "sandbox/tools/raven",
+      "status": "VERIFIED"
+    },
+    "x402_protocol": {
+      "exactEvmScheme": "REGISTERED",
+      "network": "eip155:31611",
+      "priceDefault": "$0.001",
+      "status": "ACTIVE"
+    },
+    "conway_engine": {
+      "type": "B3/S23 + 10-State Tx Automaton",
+      "status": "PASS"
+    },
+    "pqc_mldsa": {
+      "standard": "NIST FIPS 204",
+      "algorithm": "ML-DSA-65",
+      "status": "PASS"
+    },
+    "agent_policy_engine": {
+      "perRequestCap": "$0.010 MUSD",
+      "dailyBudget": "$1.000 MUSD",
+      "status": "PASS"
+    }
+  },
+  "financialPolicy": {
+    "mainnetLocked": true,
+    "realCryptoSpent": 0,
+    "unauthorizedBorrowing": false
+  }
+}

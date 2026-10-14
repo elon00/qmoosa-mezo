@@ -1,0 +1,39 @@
+{
+  "name": "qmoosa-mezo",
+  "version": "4.0.0",
+  "description": "QMOOSA MEZO — Autonomous AI Payment & DeFi Hub (MUSD/x402 Protocol on Mezo Testnet)",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev:server": "tsx src/server.ts",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build": "tsc -b",
+    "test": "tsx --test tests/lane1/*.test.ts",
+    "test:lane1": "tsx --test tests/lane1/*.test.ts",
+    "test:lane2": "tsx --test tests/lane2/*.test.ts",
+    "mission:verify": "tsx scripts/mission_verify.ts",
+    "reality:gate": "tsx scripts/reality_gate.ts",
+    "rea:audit": "tsx scripts/rea_analysis.ts",
+    "raven:rsi": "tsx scripts/raven_experiment.ts"
+  },
+  "dependencies": {
+    "@x402/core": "^2.16.0",
+    "@x402/evm": "^2.16.0",
+    "@x402/express": "^2.16.0",
+    "@x402/paywall": "^2.16.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4",
+    "viem": "^2.23.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.13.0",
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
