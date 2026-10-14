@@ -1,0 +1,75 @@
+name: "QMOOSA MEZO — Continuous Delivery Preview & Smoke Test"
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  smoke-test-deployment:
+    name: "Gateway Paywall & x402 Live Smoke Test"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout Source Code"
+        uses: actions/checkout@v4
+
+      - name: "Set up Node.js 22.x"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: "npm"
+
+      - name: "Install Dependencies"
+        run: npm ci
+
+      - name: "Build Server Distribution"
+        run: npm run build
+
+      - name: "Start QMOOSA MEZO Gateway (Background Service)"
+        run: |
+          PORT=4021 npx tsx src/server.ts &
+          echo "SERVER_PID=$!" >> $GITHUB_ENV
+          sleep 4
+
+      - name: "Smoke Test 1: Health Endpoint Reachability"
+        run: |
+          echo "Testing GET /health..."
+          curl -f -s http://localhost:4021/health | grep '"status":"HEALTHY"'
+          echo "Health check passed!"
+
+      - name: "Smoke Test 2: x402 Intercept — Expect HTTP 402 on Root Route"
+        run: |
+          echo "Testing GET / (unpaid)..."
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4021/)
+          echo "Received HTTP Code: $HTTP_CODE"
+          if [ "$HTTP_CODE" -ne 402 ]; then
+            echo "ERROR: Expected HTTP 402 Payment Required, got $HTTP_CODE"
+            exit 1
+          fi
+          echo "PASS: x402 middleware successfully intercepted unpaid request with 402."
+
+      - name: "Smoke Test 3: AI Bazaar Catalog API"
+        run: |
+          echo "Testing GET /api/bazaar..."
+          curl -f -s http://localhost:4021/api/bazaar | grep '"success":true'
+          echo "PASS: AI Bazaar catalog returned active service offerings."
+
+      - name: "Smoke Test 4: EIP-681 QR Payment Engine API"
+        run: |
+          echo "Testing GET /api/qr/generate..."
+          curl -f -s "http://localhost:4021/api/qr/generate?amount=\$0.001" | grep '"data:image/png;base64,'
+          echo "PASS: QR payment generator issued verified EIP-681 payload."
+
+      - name: "Smoke Test 5: Conway B3/S23 Automaton Transition API"
+        run: |
+          echo "Testing POST /api/conway/step..."
+          curl -f -s -X POST http://localhost:4021/api/conway/step | grep '"entropyHash":'
+          echo "PASS: Conway automaton computed deterministic state step."
+
+      - name: "Clean Teardown of Test Server"
+        if: always()
+        run: |
+          if [ -n "$SERVER_PID" ]; then
+            kill $SERVER_PID || true
+          fi

@@ -1,5 +1,6 @@
 # QMOOSA MEZO — Autonomous AI Payment & DeFi Hub
 
+[![Reality CI](https://github.com/elon00/qmoosa-mezo/actions/workflows/reality_ci.yml/badge.svg)](https://github.com/elon00/qmoosa-mezo/actions/workflows/reality_ci.yml)
 [![Mezo Testnet](https://img.shields.io/badge/Mezo%20Testnet-Chain%2031611-FF004D)](https://explorer.test.mezo.org/)
 [![Canonical MUSD](https://img.shields.io/badge/MUSD-0x1189...C503-00FFA3)](https://explorer.test.mezo.org/token/0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503)
 [![x402 Protocol](https://img.shields.io/badge/x402-HTTP%20402%20Active-blue)](https://testnet.mezo.org/docs/developers/getting-started/musd-payments-x402/x402-quickstart/)

@@ -4,14 +4,14 @@
   "upstreamRepo": "https://github.com/EverMind-AI/Raven",
   "pinnedCommit": "6b938a4267cb1f3bf1453a39ccc7d580e0eea9fd",
   "sandboxAvailable": true,
-  "timestamp": "2026-10-14T19:07:27.989Z",
+  "timestamp": "2026-10-14T19:10:38.382Z",
   "metrics": {
     "falseAcceptanceRate": 0,
     "falseRejectionRate": 0,
-    "pqcSignAndVerifyMs": 66.24389999999948,
-    "conwayAvgStepMs": 0.09179399999999077,
-    "agentPolicyEvaluationMs": 0.006063500000000204,
-    "qrParseAndValidateMs": 0.7965000000003783
+    "pqcSignAndVerifyMs": 9.047999999999774,
+    "conwayAvgStepMs": 0.1402059999999983,
+    "agentPolicyEvaluationMs": 0.0070489999999995235,
+    "qrParseAndValidateMs": 0.9715000000001055
   },
   "subagents": [
     {
