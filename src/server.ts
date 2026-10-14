@@ -29,7 +29,10 @@ dotenv.config();
 
 const PORT = Number(process.env.PORT ?? 4021);
 const NETWORK = "eip155:31611"; // Mezo testnet
-const PAY_TO = process.env.PAY_TO ?? "0xC3376296a18ef364eA19287203EEd7a87f18e738";
+const PAY_TO = process.env.PAY_TO;
+if (!PAY_TO || !/^0x[a-fA-F0-9]{40}$/.test(PAY_TO) || /^0x0{40}$/i.test(PAY_TO)) {
+  throw new Error("Set a valid, nonzero PAY_TO merchant address before starting the payment server");
+}
 const FACILITATOR_URL = process.env.FACILITATOR_URL ?? "https://facilitator.vativ.io";
 const DEFAULT_PRICE = process.env.PRICE ?? "$0.001";
 
@@ -146,6 +149,11 @@ app.post("/api/bazaar/:serviceId/execute", async (req: Request, res: Response): 
   }
 
   try {
+    // Block direct service execution until the receipt is linked to a unique, signed
+    // x402 order and verified by a trusted settlement/authorization service.
+    res.status(503).json({ error: "Order-bound payment authorization not implemented; refusing service access" });
+    return;
+    // Deliberately disabled: a caller-supplied transaction hash cannot authorize an order.
     const result = await MarketplaceManager.executeService(serviceId, prompt, receiptTxHash);
     if (agentId) {
       agentPolicy.recordSpend(agentId, service.priceNumeric, serviceId, receiptTxHash);
@@ -243,6 +251,8 @@ app.post("/api/conway/tx-intent", (req: Request, res: Response) => {
 
 // --- 7. NIST FIPS 204 Post-Quantum Cryptography ---
 app.post("/api/pqc/keygen", (_req: Request, res: Response) => {
+  res.status(503).json({ error: "NIST ML-DSA not implemented; HMAC prototype disabled" });
+  return;
   const keyPair = MLDSAEngine.generateKeyPair("ML-DSA-65");
   res.json({
     success: true,
@@ -254,6 +264,8 @@ app.post("/api/pqc/keygen", (_req: Request, res: Response) => {
 });
 
 app.post("/api/pqc/verify", (req: Request, res: Response) => {
+  res.status(503).json({ error: "NIST ML-DSA not implemented; HMAC prototype disabled" });
+  return;
   const envelope = req.body;
   const result = MLDSAEngine.verify(envelope);
   res.json({ success: true, ...result });
