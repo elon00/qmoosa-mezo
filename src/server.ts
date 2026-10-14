@@ -107,62 +107,12 @@ app.get("/api/bazaar", (_req: Request, res: Response) => {
   });
 });
 
-app.post("/api/bazaar/:serviceId/execute", async (req: Request, res: Response): Promise<void> => {
-  const { serviceId } = req.params;
-  const { prompt, receiptTxHash, agentId } = req.body;
-
-  if (!prompt || typeof prompt !== "string") {
-    res.status(400).json({ error: "Missing or invalid prompt parameter" });
-    return;
-  }
-
-  const service = MarketplaceManager.getService(serviceId);
-  if (!service) {
-    res.status(404).json({ error: `Service ${serviceId} not found` });
-    return;
-  }
-
-  // Evaluate agent budget policy if agentId is provided
-  if (agentId) {
-    const evalResult = agentPolicy.evaluateSpend(agentId, service.priceNumeric, serviceId);
-    if (!evalResult.approved) {
-      res.status(403).json({
-        error: "Agent spending policy violation",
-        reason: evalResult.reason,
-        requiresManualApproval: evalResult.requiresManualApproval
-      });
-      return;
-    }
-  }
-
-  // Require verified payment receipt
-  if (!receiptTxHash) {
-    res.status(402).json({
-      error: "Payment required",
-      price: service.priceMUSD,
-      payTo: PAY_TO,
-      network: NETWORK,
-      asset: MEZO_TESTNET_CONFIG.musdAddress,
-      qrURI: QRPaymentEngine.createPaymentURI(PAY_TO, service.priceMUSD, serviceId)
-    });
-    return;
-  }
-
-  try {
-    // Block direct service execution until the receipt is linked to a unique, signed
-    // x402 order and verified by a trusted settlement/authorization service.
-    res.status(503).json({ error: "Order-bound payment authorization not implemented; refusing service access" });
-    return;
-    // Deliberately disabled: a caller-supplied transaction hash cannot authorize an order.
-    const result = await MarketplaceManager.executeService(serviceId, prompt, receiptTxHash);
-    if (agentId) {
-      agentPolicy.recordSpend(agentId, service.priceNumeric, serviceId, receiptTxHash);
-    }
-    res.json({ success: true, result });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    res.status(500).json({ error: msg });
-  }
+app.post("/api/bazaar/:serviceId/execute", (_req: Request, res: Response) => {
+  // A user-supplied receipt hash does not establish order-bound authorization.
+  // Require a transaction-linked, replay-resistant, verified x402 session before enabling.
+  res.status(503).json({
+    error: "Paid service execution blocked until independent x402 order-bound settlement verification is integrated"
+  });
 });
 
 // --- 3. Mezo DeFi & Tokenomics Routes ---
@@ -251,24 +201,10 @@ app.post("/api/conway/tx-intent", (req: Request, res: Response) => {
 
 // --- 7. NIST FIPS 204 Post-Quantum Cryptography ---
 app.post("/api/pqc/keygen", (_req: Request, res: Response) => {
-  res.status(503).json({ error: "NIST ML-DSA not implemented; HMAC prototype disabled" });
-  return;
-  const keyPair = MLDSAEngine.generateKeyPair("ML-DSA-65");
-  res.json({
-    success: true,
-    keyId: keyPair.keyId,
-    algorithm: keyPair.algorithm,
-    publicKey: keyPair.publicKey,
-    createdAt: keyPair.createdAt
-  });
+  res.status(503).json({ error: "NIST FIPS 204 ML-DSA not implemented: HMAC prototype disabled" });
 });
-
-app.post("/api/pqc/verify", (req: Request, res: Response) => {
-  res.status(503).json({ error: "NIST ML-DSA not implemented; HMAC prototype disabled" });
-  return;
-  const envelope = req.body;
-  const result = MLDSAEngine.verify(envelope);
-  res.json({ success: true, ...result });
+app.post("/api/pqc/verify", (_req: Request, res: Response) => {
+  res.status(503).json({ error: "NIST FIPS 204 ML-DSA not implemented: HMAC prototype disabled" });
 });
 
 // --- 8. Health & Reality Check ---
