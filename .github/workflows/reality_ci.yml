@@ -44,8 +44,8 @@ jobs:
       - name: "Set up REA & Raven Sandbox Tools"
         run: |
           mkdir -p sandbox/tools
-          git clone --depth 1 https://github.com/morluto/rea sandbox/tools/rea || true
-          git clone --depth 1 https://github.com/EverMind-AI/Raven sandbox/tools/raven || true
+          echo "No unpinned third-party agent installation in CI"
+          echo "REA/Raven runtime integration remains BLOCKED pending pinned, audited installation"
 
       - name: "TypeScript Build & Typecheck"
         run: npm run build
@@ -116,7 +116,7 @@ jobs:
 
       - name: "Supply Chain & Dependency Audit"
         run: |
-          npm audit --audit-level=critical || true
+          npm audit --omit=dev --audit-level=high
 
   buildathon-summary:
     name: "Buildathon Provenance & Job Summary"
@@ -146,12 +146,7 @@ jobs:
           ### 📊 Scorecard Allocations
           | Category | Allocated | Awarded | Status |
           | :--- | :--- | :--- | :--- |
-          | **Mezo Integration** | 30 | 30 | **PASS** |
-          | **Business Viability** | 30 | 30 | **PASS** |
-          | **Technical Implementation** | 20 | 20 | **PASS** |
-          | **User Experience** | 10 | 10 | **PASS** |
-          | **Submission Materials** | 10 | 10 | **PASS** |
-          | **Total Score** | **100** | **100** | **ELIGIBLE** |
+          | **All categories** | **100** | **See verified READINESS_REPORT artifact** | **NOT PRE-APPROVED** |
 
           > Verified Pass Formula: VerifiedPass_i = Executed_i ∧ CorrectResult_i ∧ AuthenticEvidence_i ∧ IndependentCheck_i
           EOF
