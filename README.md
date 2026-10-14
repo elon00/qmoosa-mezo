@@ -126,7 +126,7 @@ npm run mission:verify
 
 ### Installation
 ```bash
-git clone https://github.com/qmoosa/qmoosa-mezo.git
+git clone https://github.com/elon00/qmoosa-mezo.git
 cd qmoosa-mezo
 npm install
 ```
