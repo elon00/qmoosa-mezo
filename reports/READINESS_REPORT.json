@@ -1,6 +1,6 @@
 {
   "target": "100/100 Internal Readiness",
-  "timestamp": "2026-10-14T19:10:59.432Z",
+  "timestamp": "2026-10-14T19:57:00.974Z",
   "totalScore": 100,
   "maxScore": 100,
   "releaseEligible": true,
@@ -19,8 +19,8 @@
       "authenticEvidence": true,
       "independentCheck": true,
       "evidenceSource": "https://rpc.test.mezo.org",
-      "evidenceHash": "9641314904f33d6b9fab111435d1b029fbcf3e56a1e5a9b887a37389dce9e769",
-      "details": "Mezo Testnet RPC live at https://rpc.test.mezo.org, block #16159240"
+      "evidenceHash": "3e4a0bcd71708c5fc6ac5b70a669a56c7ce7e77f0e2e9b787119edf6e6b8c5e1",
+      "details": "Mezo Testnet RPC live at https://rpc.test.mezo.org, block #16159810"
     },
     {
       "gateId": "GATE-02",

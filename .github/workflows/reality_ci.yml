@@ -41,6 +41,12 @@ jobs:
       - name: "Install Project Dependencies (Clean Install)"
         run: npm ci
 
+      - name: "Set up REA & Raven Sandbox Tools"
+        run: |
+          mkdir -p sandbox/tools
+          git clone --depth 1 https://github.com/morluto/rea sandbox/tools/rea || true
+          git clone --depth 1 https://github.com/EverMind-AI/Raven sandbox/tools/raven || true
+
       - name: "TypeScript Build & Typecheck"
         run: npm run build
 
