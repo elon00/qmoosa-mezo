@@ -104,8 +104,8 @@ jobs:
       - name: "Verify Mainnet Policy Lock (Fail-Closed Gate)"
         run: |
           echo "Verifying Mainnet Lock Policy..."
-          node -e '
-            import("./src/defi/vault.js").then((m) => {
+          npx tsx -e '
+            import("./src/defi/vault.ts").then((m) => {
               if (m.MEZO_TESTNET_CONFIG.id !== 31611) {
                 console.error("FATAL: Chain ID is not Mezo Testnet 31611!");
                 process.exit(1);
