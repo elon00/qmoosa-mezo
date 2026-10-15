@@ -153,28 +153,15 @@ app.get("/api/qr/generate", async (req: Request, res: Response): Promise<void> =
 });
 
 // --- 5. Settlement Verification & Receipts ---
-app.post("/api/settlement/verify", async (req: Request, res: Response): Promise<void> => {
-  const { txHash, minAmountMUSD } = req.body;
-  if (!txHash) {
-    res.status(400).json({ error: "Missing txHash parameter" });
-    return;
-  }
-
-  const expectedMin = minAmountMUSD ? Number(minAmountMUSD) : 0.001;
-  const result = await SettlementVerifier.verifyOnChainSettlement(txHash, PAY_TO, expectedMin);
-
-  if (result.verified) {
-    res.json({ success: true, receipt: result.receipt });
-  } else {
-    res.status(400).json({ success: false, reason: result.reason });
-  }
-});
-
-app.get("/api/receipts", (_req: Request, res: Response) => {
-  res.json({
-    success: true,
-    receipts: SettlementVerifier.listReceipts()
+// Do not expose a public receipt-consumption endpoint. A third party could submit
+// someone else's genuine transfer hash to consume it before its rightful order.
+app.post("/api/settlement/verify", (_req: Request, res: Response) => {
+  res.status(503).json({
+    error: "Public settlement consumption disabled until authenticated, order-bound, durable verification is implemented"
   });
+});
+app.get("/api/receipts", (_req: Request, res: Response) => {
+  res.status(403).json({ error: "Private payment receipts require authenticated access" });
 });
 
 // --- 6. Conway Automaton & State Machine ---
