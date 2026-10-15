@@ -77,6 +77,7 @@ jobs:
           name: readiness-reports-node-${{ matrix.node-version }}
           path: |
             reports/READINESS_REPORT.json
+            reports/READINESS_SUMMARY.md
             reports/REA_ANALYSIS.json
             reports/RSI_BASELINE.json
             reports/RSI_EXPERIMENTS.json
@@ -87,6 +88,7 @@ jobs:
     name: "Security Engineering & Mainnet Lock Enforcement"
     runs-on: ubuntu-latest
     needs: reality-verification
+    if: always()
 
     steps:
       - name: "Checkout Source Code"
@@ -134,7 +136,7 @@ jobs:
           # 🚀 QMOOSA MEZO — Reality Gate Verification Summary
 
           **Target:** 100/100 Internal Buildathon Readiness  
-          **Status:** All Reality Gates Evaluated  
+          **Status:** See live gate results and failed required checks; no release eligibility implied  
           **Mainnet Policy:** **LOCKED**
 
           ### ⛓️ Live Blockchain Evidence
