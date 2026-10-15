@@ -33,3 +33,9 @@
 - https://github.com/morluto/rea
 - https://github.com/EverMind-AI/Raven
 - https://testnet.mezo.org/docs/developers/getting-started/musd-payments-x402/x402-quickstart/
+
+## Additional verified blockers (2026-10-15)
+- GitHub security job on run 38717623827 failed `npm audit --omit=dev --audit-level=high`: 31 reported vulnerabilities (4 high, 27 moderate) in the tested dependency graph. Affected chains include `ws`, `uuid`, wallet SDK dependencies. Do not use `npm audit fix --force` without reviewing breaking versions, lockfile and regression tests.
+- `SettlementVerifier` uses a process-local Set/Map to mark consumed transactions, not a durable database or atomic unique constraint. After restart, receipts can be reused. It also used floating point amounts. Real payment protection requires durable order-bound validation, exact bigint parsing, event/log-index uniqueness, and idempotent atomic fulfillment.
+- A public `/api/settlement/verify` could consume arbitrary genuine transfer hashes; public `/api/receipts` could enumerate receipts. Endpoints are now restricted/disabled until authenticated, order-bound implementation exists.
+- Zero-mock reality lane: do not award x402 settlement or replay points until cross-process restart/concurrency/replay negative cases pass with live testnet evidence.
