@@ -29,7 +29,10 @@ dotenv.config();
 
 const PORT = Number(process.env.PORT ?? 4021);
 const NETWORK = "eip155:31611"; // Mezo testnet
-const PAY_TO = process.env.PAY_TO ?? "0xC3376296a18ef364eA19287203EEd7a87f18e738";
+const PAY_TO = process.env.PAY_TO;
+if (!PAY_TO || !/^0x[a-fA-F0-9]{40}$/.test(PAY_TO) || /^0x0{40}$/i.test(PAY_TO)) {
+  throw new Error("Set a valid, nonzero PAY_TO merchant address before starting the payment server");
+}
 const FACILITATOR_URL = process.env.FACILITATOR_URL ?? "https://facilitator.vativ.io";
 const DEFAULT_PRICE = process.env.PRICE ?? "$0.001";
 
@@ -104,57 +107,12 @@ app.get("/api/bazaar", (_req: Request, res: Response) => {
   });
 });
 
-app.post("/api/bazaar/:serviceId/execute", async (req: Request, res: Response): Promise<void> => {
-  const { serviceId } = req.params;
-  const { prompt, receiptTxHash, agentId } = req.body;
-
-  if (!prompt || typeof prompt !== "string") {
-    res.status(400).json({ error: "Missing or invalid prompt parameter" });
-    return;
-  }
-
-  const service = MarketplaceManager.getService(serviceId);
-  if (!service) {
-    res.status(404).json({ error: `Service ${serviceId} not found` });
-    return;
-  }
-
-  // Evaluate agent budget policy if agentId is provided
-  if (agentId) {
-    const evalResult = agentPolicy.evaluateSpend(agentId, service.priceNumeric, serviceId);
-    if (!evalResult.approved) {
-      res.status(403).json({
-        error: "Agent spending policy violation",
-        reason: evalResult.reason,
-        requiresManualApproval: evalResult.requiresManualApproval
-      });
-      return;
-    }
-  }
-
-  // Require verified payment receipt
-  if (!receiptTxHash) {
-    res.status(402).json({
-      error: "Payment required",
-      price: service.priceMUSD,
-      payTo: PAY_TO,
-      network: NETWORK,
-      asset: MEZO_TESTNET_CONFIG.musdAddress,
-      qrURI: QRPaymentEngine.createPaymentURI(PAY_TO, service.priceMUSD, serviceId)
-    });
-    return;
-  }
-
-  try {
-    const result = await MarketplaceManager.executeService(serviceId, prompt, receiptTxHash);
-    if (agentId) {
-      agentPolicy.recordSpend(agentId, service.priceNumeric, serviceId, receiptTxHash);
-    }
-    res.json({ success: true, result });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    res.status(500).json({ error: msg });
-  }
+app.post("/api/bazaar/:serviceId/execute", (_req: Request, res: Response) => {
+  // A user-supplied receipt hash does not establish order-bound authorization.
+  // Require a transaction-linked, replay-resistant, verified x402 session before enabling.
+  res.status(503).json({
+    error: "Paid service execution blocked until independent x402 order-bound settlement verification is integrated"
+  });
 });
 
 // --- 3. Mezo DeFi & Tokenomics Routes ---
@@ -195,28 +153,15 @@ app.get("/api/qr/generate", async (req: Request, res: Response): Promise<void> =
 });
 
 // --- 5. Settlement Verification & Receipts ---
-app.post("/api/settlement/verify", async (req: Request, res: Response): Promise<void> => {
-  const { txHash, minAmountMUSD } = req.body;
-  if (!txHash) {
-    res.status(400).json({ error: "Missing txHash parameter" });
-    return;
-  }
-
-  const expectedMin = minAmountMUSD ? Number(minAmountMUSD) : 0.001;
-  const result = await SettlementVerifier.verifyOnChainSettlement(txHash, PAY_TO, expectedMin);
-
-  if (result.verified) {
-    res.json({ success: true, receipt: result.receipt });
-  } else {
-    res.status(400).json({ success: false, reason: result.reason });
-  }
-});
-
-app.get("/api/receipts", (_req: Request, res: Response) => {
-  res.json({
-    success: true,
-    receipts: SettlementVerifier.listReceipts()
+// Do not expose a public receipt-consumption endpoint. A third party could submit
+// someone else's genuine transfer hash to consume it before its rightful order.
+app.post("/api/settlement/verify", (_req: Request, res: Response) => {
+  res.status(503).json({
+    error: "Public settlement consumption disabled until authenticated, order-bound, durable verification is implemented"
   });
+});
+app.get("/api/receipts", (_req: Request, res: Response) => {
+  res.status(403).json({ error: "Private payment receipts require authenticated access" });
 });
 
 // --- 6. Conway Automaton & State Machine ---
@@ -243,20 +188,10 @@ app.post("/api/conway/tx-intent", (req: Request, res: Response) => {
 
 // --- 7. NIST FIPS 204 Post-Quantum Cryptography ---
 app.post("/api/pqc/keygen", (_req: Request, res: Response) => {
-  const keyPair = MLDSAEngine.generateKeyPair("ML-DSA-65");
-  res.json({
-    success: true,
-    keyId: keyPair.keyId,
-    algorithm: keyPair.algorithm,
-    publicKey: keyPair.publicKey,
-    createdAt: keyPair.createdAt
-  });
+  res.status(503).json({ error: "NIST FIPS 204 ML-DSA not implemented: HMAC prototype disabled" });
 });
-
-app.post("/api/pqc/verify", (req: Request, res: Response) => {
-  const envelope = req.body;
-  const result = MLDSAEngine.verify(envelope);
-  res.json({ success: true, ...result });
+app.post("/api/pqc/verify", (_req: Request, res: Response) => {
+  res.status(503).json({ error: "NIST FIPS 204 ML-DSA not implemented: HMAC prototype disabled" });
 });
 
 // --- 8. Health & Reality Check ---
