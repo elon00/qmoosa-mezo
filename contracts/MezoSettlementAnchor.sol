@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.28;
 
 interface IERC20 {
@@ -30,7 +30,7 @@ contract MezoSettlementAnchor {
     event ReceiptConsumed(bytes32 indexed receiptHash, address indexed consumer);
 
     constructor(address _musdToken) {
-        require(_musdToken != address(0), "Zero address");
+        require(_musdToken != address(0), "Zimbabwe/Mezo: Zero address");
         musdToken = IERC20(_musdToken);
         owner = msg.sender;
     }
