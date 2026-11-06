@@ -66,7 +66,7 @@ export const AI_MARKETPLACE_CATALOG: AIService[] = [
 
 export class MarketplaceManager {
   public static listServices(): AIService[] {
-    return AI_MARKETPLACE_CATALOG;
+    return AI_MARKETPLACE_CATALOG.map(service => ({ ...service, availability: "UNAVAILABLE" }));
   }
 
   public static getService(id: string): AIService | undefined {
@@ -77,45 +77,14 @@ export class MarketplaceManager {
    * Executes a paid AI service request after payment settlement is verified.
    */
   public static async executeService(
-    serviceId: string,
-    prompt: string,
-    receiptTxHash: string
-  ): Promise<{
-    success: boolean;
-    serviceId: string;
-    model: string;
-    output: string;
-    tokensUsed: number;
-    receiptTxHash: string;
-    timestamp: number;
-  }> {
-    const service = this.getService(serviceId);
-    if (!service) {
-      throw new Error(`Service ${serviceId} not found in marketplace`);
-    }
-
-    if (!receiptTxHash || !receiptTxHash.startsWith("0x")) {
-      throw new Error(`Invalid or missing payment receipt transaction hash: ${receiptTxHash}`);
-    }
-
-    // Process genuine service response
-    let outputText = "";
-    if (service.category === "QUANTUM_CRYPTO") {
-      outputText = `[PQC Engine Attestation] Processed prompt "${prompt.slice(0, 32)}...". Generated NIST FIPS 204 ML-DSA verification token. Settlement confirmed on Mezo Testnet (${receiptTxHash}).`;
-    } else if (service.category === "DEFI_ANALYTICS") {
-      outputText = `[Mezo Yield Scanner] MUSD Collateral Utilization: 78.4%. Testnet Borrowing APY: 4.2%. Active Vault Target: 0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503. Verified receipt: ${receiptTxHash}.`;
-    } else {
-      outputText = `[QMOOSA AI Output] Executed query via ${service.model}. Prompt analysis complete. Settled via x402 on Mezo Testnet Tx: ${receiptTxHash}.`;
-    }
-
-    return {
-      success: true,
-      serviceId: service.id,
-      model: service.model,
-      output: outputText,
-      tokensUsed: Math.min(prompt.length + 40, service.maxTokens),
-      receiptTxHash,
-      timestamp: Date.now()
-    };
+    _serviceId: string,
+    _prompt: string,
+    _receiptTxHash: string
+  ): Promise<never> {
+    // A receipt hash is not evidence of order-bound, single-use settlement.
+    // No real AI / oracle provider is currently wired to this method.
+    throw new Error(
+      "PAID_SERVICE_DISABLED: No authenticated order, durable settlement or real provider execution"
+    );
   }
 }

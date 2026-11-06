@@ -3,8 +3,8 @@
 [![Reality CI](https://github.com/elon00/qmoosa-mezo/actions/workflows/reality_ci.yml/badge.svg)](https://github.com/elon00/qmoosa-mezo/actions/workflows/reality_ci.yml)
 [![Mezo Testnet](https://img.shields.io/badge/Mezo%20Testnet-Chain%2031611-FF004D)](https://explorer.test.mezo.org/)
 [![Canonical MUSD](https://img.shields.io/badge/MUSD-0x1189...C503-00FFA3)](https://explorer.test.mezo.org/token/0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503)
-[![x402 Protocol](https://img.shields.io/badge/x402-HTTP%20402%20Active-blue)](https://testnet.mezo.org/docs/developers/getting-started/musd-payments-x402/x402-quickstart/)
-[![Readiness Score](https://img.shields.io/badge/Internal%20Readiness-100%2F100-success)](#scorecard)
+[![x402 Protocol](https://img.shields.io/badge/x402-Example%20Gateway%20Only-blue)](https://testnet.mezo.org/docs/developers/getting-started/musd-payments-x402/x402-quickstart/)
+[![Readiness Status](https://img.shields.io/badge/Internal%20Readiness-UNVERIFIED-orange)](#scorecard)
 [![Mainnet Policy](https://img.shields.io/badge/Mainnet-LOCKED-red)](#mainnet-lock)
 
 > An MUSD-powered marketplace where humans and autonomous AI agents discover, pay for, and consume intelligent services using the official x402 protocol on Mezo Testnet.
@@ -91,6 +91,9 @@ graph TD
 
 ## 5. Zero-Mock Reality Engine & Scorecard
 
+> **Security correction:** Earlier hardcoded PASS categories, REA file-hash-only reports, Raven local benchmarks, and HMAC masquerading as ML-DSA are NOT genuine live integration evidence. The proposed 100/100 score is withdrawn. HTTP x402 merchant must set PAY_TO explicitly; direct receipt-hash service execution and experimental PQC endpoints are disabled until safe replacements exist.
+
+
 We enforce a strict fail-closed testing policy: simulated tests cannot establish real-network readiness.
 
 ```bash
@@ -98,25 +101,21 @@ We enforce a strict fail-closed testing policy: simulated tests cannot establish
 npm run mission:verify
 ```
 
-### Official Scorecard Breakdown (Target: 100/100)
+### Current release status (evidence-gated)
 
-| Category | Gate / Acceptance Criterion | Points | Status | Authentic Evidence Source |
-| :--- | :--- | :--- | :--- | :--- |
-| **Mezo Integration** | Canonical Mezo Testnet Chain 31611 RPC | 8 / 8 | **PASS** | `https://rpc.test.mezo.org` (Block #16159201) |
-| **Mezo Integration** | Canonical MUSD Smart Contract Bytecode | 8 / 8 | **PASS** | 12,876 bytes verified on-chain |
-| **Mezo Integration** | x402 Facilitator & Challenge Gateway | 10 / 10 | **PASS** | `https://facilitator.vativ.io` active |
-| **Mezo Integration** | Replay-Resistant Receipt & Nonce Ledger | 4 / 4 | **PASS** | `src/x402/settlement.ts` |
-| **Business Viability** | AI Marketplace Practical Utility | 10 / 10 | **PASS** | 4 paid services active in catalog |
-| **Business Viability** | Documented Problem & Merchant Economics | 10 / 10 | **PASS** | `docs/ARCHITECTURE.md` |
-| **Business Viability** | Ecosystem Distribution & DeFi Vault Roadmap | 10 / 10 | **PASS** | `src/defi/vault.ts` |
-| **Technical Implementation** | Conway Deterministic Automaton | 5 / 5 | **PASS** | `src/core/conway.ts` |
-| **Technical Implementation** | NIST FIPS 204 ML-DSA Post-Quantum Signatures | 5 / 5 | **PASS** | `src/crypto/mldsa.ts` |
-| **Technical Implementation** | Agent Spending Policy & Security Controls | 5 / 5 | **PASS** | `src/agents/policy.ts` |
-| **Technical Implementation** | REA Analysis & Raven RSI Agent Sandbox | 5 / 5 | **PASS** | `sandbox/tools/rea` & `sandbox/tools/raven` |
-| **User Experience** | Multi-Wallet & QR Payment Journey | 10 / 10 | **PASS** | `src/wallet/qr.ts` |
-| **Submission Materials** | Public Repository, Pitch Deck & 2-Min Script | 10 / 10 | **PASS** | `docs/` & `reports/` |
-| **Total Score** | **All Reality Gates Verified** | **100 / 100** | **ELIGIBLE** | **Exit Code 0** |
+The previous 100/100 internal score has been **retracted**. It is not evidence of working settlement, cryptography, Raven RSI, or paid AI inference.
 
+| Critical capability | Current status |
+|---|---|
+| Mezo Testnet chain and MUSD read-only checks | Independently recheck on every tested SHA |
+| x402 protected example route | SDK middleware present; genuine paid E2E proof pending |
+| Bazaar paid service execution | **503 DISABLED** pending order-bound, durable settlement and real providers |
+| Public receipt verification and listing | **Disabled** |
+| ML-DSA-65 authorization | **Disabled** until vetted library, pinned lockfile, vectors, and replay tests |
+| REA and Raven RSI | **NOT EXECUTED** by source-hash/benchmark wrappers |
+| Production/mainnet | **LOCKED**; no automatic release |
+
+See [the security remediation roadmap](docs/VERIFICATION_TRUTH_AND_RSI_ROADMAP.md).
 ---
 
 ## 6. Getting Started

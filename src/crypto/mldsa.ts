@@ -1,31 +1,32 @@
-﻿import { ml_dsa65 } from '@noble/post-quantum/ml-dsa.js';
+/**
+ * Production safety boundary: ML-DSA-65 is not enabled in this release.
+ * Historical HMAC "ML-DSA" was not compliant. A subsequent attempted
+ * @noble/post-quantum import lacked a lockfile dependency and broke CI.
+ *
+ * No signing or verification claim is permitted until a pinned, vetted
+ * implementation is installed, tested using published NIST vectors,
+ * and independently reviewed with durable nonce/key management.
+ */
+const UNSUPPORTED = "ML-DSA-65 DISABLED: no validated cryptographic provider, tests or key lifecycle";
 
-export class SovereignMLDSA65 {
-  static keygen(seed?: Uint8Array) {
-    const keys = ml_dsa65.keygen(seed);
-    if (keys.publicKey.length !== 1952 || keys.secretKey.length !== 4032) {
-      throw new Error('Invalid NIST ML-DSA-65 key dimensions');
-    }
-    return {
-      publicKey: Buffer.from(keys.publicKey).toString('hex'),
-      secretKey: Buffer.from(keys.secretKey).toString('hex')
-    };
+export class MLDSAEngine {
+  public static generateKeyPair(_algorithm: string = "ML-DSA-65"): never {
+    throw new Error(UNSUPPORTED);
   }
 
-  static sign(message: Uint8Array, secretKeyHex: string): string {
-    const sk = Uint8Array.from(Buffer.from(secretKeyHex, 'hex'));
-    const sig = ml_dsa65.sign(message, sk);
-    if (sig.length !== 3309) throw new Error('Invalid ML-DSA-65 signature length');
-    return Buffer.from(sig).toString('hex');
+  public static sign(..._args: unknown[]): never {
+    throw new Error(UNSUPPORTED);
   }
 
-  static verify(signatureHex: string, message: Uint8Array, publicKeyHex: string): boolean {
-    try {
-      const sig = Uint8Array.from(Buffer.from(signatureHex, 'hex'));
-      const pk = Uint8Array.from(Buffer.from(publicKeyHex, 'hex'));
-      return ml_dsa65.verify(sig, message, pk);
-    } catch {
-      return false;
-    }
+  public static rotateKey(_keyId: string): never {
+    throw new Error(UNSUPPORTED);
+  }
+
+  public static verify(_envelope: unknown): { valid: false; reason: string } {
+    return { valid: false, reason: UNSUPPORTED };
+  }
+
+  public static resetReplayCache(): void {
+    // No private key registry or replay cache exists in the disabled backend.
   }
 }
