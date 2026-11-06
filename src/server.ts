@@ -59,8 +59,12 @@ const resourceServer = new x402ResourceServer(facilitator).register(
 );
 
 const paywall = createPaywall().withNetwork(evmPaywall).build();
+// No external payments are accepted until genuine order-bound settlement and fulfillment exist.
+// The 402 demonstration below is limited to explicit GitHub Actions CI smoke tests.
+const CI_X402_PROBE = process.env.CI === "true" && process.env.ENABLE_CI_X402_PROBE === "true";
 
-// --- 1. Official x402 Paywall Protected Route ---
+// --- 1. CI-only x402 challenge demonstration (no payments are sent) ---
+if (CI_X402_PROBE) {
 app.use(
   paymentMiddleware(
     {
@@ -91,6 +95,7 @@ app.use(
     paywall
   )
 );
+}
 
 // Unlocked Root
 app.get("/", (_req: Request, res: Response) => {
@@ -99,7 +104,8 @@ app.get("/", (_req: Request, res: Response) => {
     project: "QMOOSA MEZO — Autonomous AI Payment & DeFi Hub",
     network: "Mezo Testnet (eip155:31611)",
     asset: "MUSD (0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503)",
-    message: "Paid! You unlocked the QMOOSA MEZO Gateway.",
+    message: CI_X402_PROBE ? "CI-only x402 challenge probe; no settlement submitted" : "Gateway online; paid service routes disabled pending verified fulfillment",
+    paymentStatus: CI_X402_PROBE ? "CI_PROBE_ONLY" : "DISABLED",
     timestamp: Date.now()
   });
 });
@@ -145,6 +151,11 @@ app.get("/api/defi/balance/:address", async (req: Request, res: Response): Promi
 
 // --- 4. QR Code Payment Generator ---
 app.get("/api/qr/generate", async (req: Request, res: Response): Promise<void> => {
+  // Do not issue a usable payment QR for an unfulfillable service.
+  if (!CI_X402_PROBE) {
+    res.status(503).json({ error: "Payment QR issuance disabled until authenticated orders and paid fulfillment work" });
+    return;
+  }
   try {
     const serviceId = (req.query.serviceId as string) || "qmoosa-fast-inference";
     const service = MarketplaceManager.getService(serviceId);

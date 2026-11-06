@@ -48,3 +48,6 @@
 
 ## Existing PR #1
 PR #1 is a stale draft against older source. This work carries its legitimate fail-closed protections forward from the current `main` into a new draft PR. Do not merge the old PR blindly or equate a merged safety PR with market certification.
+
+## Payment-collection protection
+The default server never installs x402 paid route middleware or returns customer-facing payment QR codes; it serves availability and health endpoints only. A CI-only flag may test the unpaid HTTP 402 challenge on localhost with a discard-only example merchant; it does not settle or accept any customer payment. Re-enable actual paid routes only after independent end-to-end delivery and order-bound settlement is proven.\n

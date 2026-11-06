@@ -24,9 +24,13 @@ test("Public HTTP endpoints reject forged payment, receipt consumption, and PQC 
     const pqc = await fetch(host + "/api/pqc/keygen", { method: "POST" });
     assert.equal(pqc.status, 503);
     const hackedQR = await fetch(host + "/api/qr/generate?recipient=0x" + "b".repeat(40));
-    assert.equal(hackedQR.status, 400);
+    assert.equal(hackedQR.status, 503);
     const hackedPrice = await fetch(host + "/api/qr/generate?amount=%240.00001");
-    assert.equal(hackedPrice.status, 400);
+    assert.equal(hackedPrice.status, 503);
+    const unpaidRoot = await fetch(host + "/");
+    assert.equal(unpaidRoot.status, 200);
+    const root = await unpaidRoot.json() as { paymentStatus?: string };
+    assert.equal(root.paymentStatus, "DISABLED");
     const health = await fetch(host + "/health");
     assert.equal(health.status, 200);
     const body = await health.json() as { productionCertified?: boolean; mainnet?: string };

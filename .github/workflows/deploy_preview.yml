@@ -32,6 +32,8 @@ jobs:
         env:
           # CI-only testnet non-receiving address. Never pay or use in production.
           PAY_TO: "0x000000000000000000000000000000000000dEaD"
+          CI: "true"
+          ENABLE_CI_X402_PROBE: "true"
         run: |
           PORT=4021 npx tsx src/server.ts &
           echo "SERVER_PID=$!" >> $GITHUB_ENV
