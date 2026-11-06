@@ -38,7 +38,13 @@ const FACILITATOR_URL = process.env.FACILITATOR_URL ?? "https://facilitator.vati
 const DEFAULT_PRICE = process.env.PRICE ?? "$0.001";
 
 export const app = express();
-app.use(express.json());
+app.disable("x-powered-by");
+app.use((_req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "no-referrer");
+  next();
+});
+app.use(express.json({ limit: "32kb" }));
 
 // Initialize engines
 const agentPolicy = new AgentPolicyEngine();
@@ -140,11 +146,22 @@ app.get("/api/defi/balance/:address", async (req: Request, res: Response): Promi
 // --- 4. QR Code Payment Generator ---
 app.get("/api/qr/generate", async (req: Request, res: Response): Promise<void> => {
   try {
-    const recipient = (req.query.recipient as string) || PAY_TO;
-    const amount = (req.query.amount as string) || DEFAULT_PRICE;
     const serviceId = (req.query.serviceId as string) || "qmoosa-fast-inference";
-
-    const uri = QRPaymentEngine.createPaymentURI(recipient, amount, serviceId);
+    const service = MarketplaceManager.getService(serviceId);
+    if (!service) {
+      res.status(404).json({ error: "Unknown service ID" });
+      return;
+    }
+    if (req.query.recipient && String(req.query.recipient).toLowerCase() !== PAY_TO.toLowerCase()) {
+      res.status(400).json({ error: "Recipient override rejected; merchant is server configured" });
+      return;
+    }
+    const amount = (req.query.amount as string) || service.priceMUSD;
+    if (amount !== service.priceMUSD) {
+      res.status(400).json({ error: "Payment amount must match server-quoted service price" });
+      return;
+    }
+    const uri = QRPaymentEngine.createPaymentURI(PAY_TO, amount, serviceId);
     const dataUrl = await QRPaymentEngine.generateDataURL(uri);
 
     res.json({ success: true, uri, qrCodeDataUrl: dataUrl });
@@ -190,10 +207,10 @@ app.post("/api/conway/tx-intent", (req: Request, res: Response) => {
 
 // --- 7. NIST FIPS 204 Post-Quantum Cryptography ---
 app.post("/api/pqc/keygen", (_req: Request, res: Response) => {
-  res.status(503).json({ error: "NIST FIPS 204 ML-DSA not implemented: HMAC prototype disabled" });
+  res.status(503).json({ error: "ML-DSA-65 disabled pending validated provider, lockfile, vectors, and durable key lifecycle" });
 });
 app.post("/api/pqc/verify", (_req: Request, res: Response) => {
-  res.status(503).json({ error: "NIST FIPS 204 ML-DSA not implemented: HMAC prototype disabled" });
+  res.status(503).json({ error: "ML-DSA-65 disabled pending validated provider, lockfile, vectors, and durable key lifecycle" });
 });
 
 // --- 8. Health & Reality Check ---
