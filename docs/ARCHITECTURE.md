@@ -1,78 +1,40 @@
-# QMOOSA MEZO — System Architecture Specification
-**Version:** 4.0.0  
-**Ecosystem:** Mezo Testnet (Chain ID 31611) • MUSD Protocol • x402 Bazaar • Conway Engine • PQC  
+# QMOOSA Mezo — Architecture (implemented versus target)
 
----
+**Current stage: evidence-gated Mezo Testnet prototype. Mainnet: LOCKED.**
 
-## 1. High-Level Architecture Overview
+## Implemented, testable source
+- Express HTTP server, health, and service catalog with explicit UNAVAILABLE statuses.
+- x402 SDK resource-server setup; the unpaid 402 challenge is restricted to explicit CI smoke tests. No public paid routes.
+- Mezo Testnet `eip155:31611` and canonical 18-decimal MUSD reference.
+- Deterministic Conway B3/S23 automaton and in-memory agent policy unit tests.
+- QR URI parsing/generation library with strict recipient and exact amount checks; public payment QR issuance disabled.
+- Public settlement consumption/receipt enumeration and ML-DSA service endpoints fail closed.
+- Read-only Lane 2 real Mezo RPC tests; they do not establish a paid transaction.
 
-```mermaid
-graph TD
-    Client["User Interface / Web4 Client<br/>(Desktop & Mobile, QR, Wagmi/Viem)"] -->|HTTP Request| Server["QMOOSA MEZO Gateway<br/>(Express + @x402 Middleware)"]
-    
-    subgraph Payment_Infrastructure ["Mezo x402 Payment Layer"]
-        Server -->|HTTP 402 + Requirements| Client
-        Client -->|Signed Payment Auth| Facilitator["Official x402 Facilitator<br/>(facilitator.vativ.io)"]
-        Facilitator -->|Settlement Tx| MezoChain["Mezo Testnet Blockchain<br/>(Chain 31611, RPC)"]
-        MezoChain -->|Receipt / MUSD Transfer| Facilitator
-        Facilitator -->|Proof of Settlement| Server
-    end
-    
-    subgraph Core_Engines ["Processing & Governance Engines"]
-        Server --> Conway["Conway Automaton Engine<br/>(B3/S23 & 10-State Tx Automaton)"]
-        Server --> AgentPolicy["Agent Policy & Spending Engine<br/>(Limits, Nonces, Role Control)"]
-        Server --> PQC["Post-Quantum Cryptography Module<br/>(NIST FIPS 204 ML-DSA Sign/Verify)"]
-        Server --> Marketplace["AI Bazaar Catalog<br/>(Paid Models, Tools & Oracles)"]
-        Server --> DeFi["DeFi Composability Hub<br/>(MUSD Vaults & Tokenomics)"]
-    end
-    
-    subgraph Inspection_Sandbox ["Analysis & RSI Sandbox"]
-        REA["REA MCP Inspector<br/>(Static/Runtime Analysis)"]
-        Raven["Raven RSI Controller<br/>(8 Specialized Subagents)"]
-    end
+## Target architecture (not implemented as working end-to-end service)
+
+```text
+Buyer Wallet/Agent (authenticated)
+  -> Service Order (server quote: resource, merchant, asset, amount, nonce, expiry)
+  -> HTTP 402 Payment Required (official x402 EVM scheme)
+  -> Wallet-signed authorization
+  -> Authenticated facilitator verification and MUSD testnet settlement
+  -> Independent chain receipt verification + finality
+  -> Atomic PostgreSQL-backed consumption of order and receipt/log index
+  -> Real AI/DeFi provider execution
+  -> Idempotent fulfillment + private customer receipt
+  -> Observability, refunds, operational review
 ```
 
----
+## Security principles
+- No source hash, response prefix, in-memory Set, HTTP status or mocked transfer counts as payment authorization.
+- Store precise base-unit amounts using `bigint`, not floating-point comparisons.
+- Bind payment to exact resource, price, merchant, chain, asset, signed payer and nonce.
+- Keep REA/Raven isolated without wallet keys. Only audited, pinned execution may claim agent experiments.
+- ML-DSA-65 must be a vetted, pinned algorithm with full NIST vectors and secure key lifecycle; never substitute HMAC.
+- Detect/reject wrong network, token, amount, receiver, replay, reorg and concurrent requests.
 
-## 2. Architectural Layers
+## Releases and operations
+Tests -> security review -> independent testnet settlement -> replay/rollback test -> privacy, consumer and regulatory review -> human approval. Mainnet requires a separate authorization, with no auto-spend.
 
-### Layer 1: User Experience & Wallets
-- **Interface:** Modern responsive Web UI with dark-mode cyberpunk aesthetic, QR payment scanner/display, transaction history, receipts viewer.
-- **Wallet Support:** EVM wallet connection via `viem` & standard EIP-1193 providers with automatic chain switching to Mezo Testnet (`eip155:31611`).
-- **QR Engine:** Generates and parses standard EIP-681 / x402 payment URIs with embedded network, recipient, token, and challenge metadata.
-
-### Layer 2: Payment Protocol (x402 + Mezo MUSD)
-- **Protocol:** HTTP 402 Payment Required standard (`@x402/core`, `@x402/express`, `@x402/evm`, `@x402/paywall`).
-- **Network:** Mezo Testnet (`eip155:31611`).
-- **Token:** Canonical MUSD (`0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503`, 18 decimals).
-- **Facilitator:** `https://facilitator.vativ.io`.
-- **Payment Lifecycle:**
-  1. Client sends request to protected API.
-  2. Server responds with `HTTP 402 Payment Required` and `PAYMENT-REQUIRED` header containing base64 challenge.
-  3. Client signs payment authorization using connected EVM wallet.
-  4. Payment settled via official facilitator on Mezo Testnet.
-  5. Settlement verified on-chain, replay nonce consumed, protected payload delivered.
-
-### Layer 3: AI Marketplace (Bazaar)
-- **Catalog of Paid AI Services:**
-  - Fast Inference (`gpt-4o-mini`, `gemini-flash` compatible models)
-  - Deep Reasoning (`deep-agent-v1`)
-  - Post-Quantum Identity Attestation (`pqc-notary-v1`)
-  - Autonomous Smart Contract Audit (`vuln-scan-v1`)
-- **Payment-to-Service Correlation:** Every execution requires a valid, settled MUSD receipt hash.
-
-### Layer 4: Deterministic Automaton (Conway Engine)
-- **Mathematical Engine:** Game of Life B3/S23 deterministic cellular grid transitions for entropy and procedural seed generation.
-- **Transaction State Machine:**
-  `CREATED` ➔ `VALIDATED` ➔ `AUTHORIZATION_REQUIRED` ➔ `AUTHORIZED` ➔ `SETTLING` ➔ `SETTLED` ➔ `EXECUTING` ➔ `VERIFIED` ➔ `FAILED` / `CANCELLED`.
-- **Safety Rule:** Conway engine transitions cannot independently authorize fund transfers.
-
-### Layer 5: Post-Quantum Cryptography (PQC)
-- **Algorithm:** NIST FIPS 204 ML-DSA (Module-Lattice-Based Digital Signature Algorithm).
-- **Capabilities:** Key generation, public key registration, canonical envelope serialization, signature verification, negative tamper tests, replay prevention.
-
-### Layer 6: Security & Reality Gates
-- **Two Distinct Testing Lanes:**
-  - **Lane 1:** Unit & deterministic local tests (fixtures, state machines, PQC vector tests).
-  - **Lane 2:** Real network verification (Mezo Testnet RPC queries, MUSD contract bytecode verification, real external facilitator connectivity).
-- **Mainnet Lock:** Hard enforcement against unauthorized real mainnet fund dissipation.
+See `docs/GLOBAL_PRODUCTION_BLUEPRINT.md`, `docs/GLOBAL_COMPLIANCE_CHECKLIST.md` and `SECURITY.md`.

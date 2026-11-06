@@ -7,13 +7,13 @@
 [![Readiness Status](https://img.shields.io/badge/Internal%20Readiness-UNVERIFIED-orange)](#scorecard)
 [![Mainnet Policy](https://img.shields.io/badge/Mainnet-LOCKED-red)](#mainnet-lock)
 
-> An MUSD-powered marketplace where humans and autonomous AI agents discover, pay for, and consume intelligent services using the official x402 protocol on Mezo Testnet.
+> **CURRENT STATE: TESTNET PROTOTYPE, NOT A WORKING PAID MARKETPLACE.** Service execution, receipt consumption, public QR payments and ML-DSA signing are disabled until independently verified. The x402 HTTP 402 challenge is available only in explicit CI smoke tests.
 
 ---
 
 ## 1. Executive Summary
 
-QMOOSA MEZO is an autonomous AI service hub built for the Mezo Buildathon. It implements sub-cent MUSD micropayments (`$0.001 MUSD`) using the official `@x402/*` protocol and Mezo Testnet settlement facilitator.
+QMOOSA MEZO is an autonomous AI service hub built for the Mezo Buildathon. It integrates official `@x402/*` SDK interfaces, but does **not** yet provide independently verified, order-bound MUSD payment fulfillment. Prices are proposed, not a live offer.
 
 ### Core Value Proposition
 - **Developers:** Monetize AI endpoints, data feeds, and security oracles with per-query MUSD micropayments.
@@ -33,9 +33,9 @@ In strict adherence to the official Mezo x402 specification:
 | **CAIP-2** | `eip155:31611` | Mezo Specification |
 | **Canonical MUSD** | `0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503` | On-Chain Bytecode (12,876 chars) |
 | **Decimals** | 18 | ERC-20 `decimals()` Query |
-| **x402 Facilitator** | `https://facilitator.vativ.io` | Reachability Probe Verified |
+| **x402 Facilitator** | `https://facilitator.vativ.io` | Configured endpoint; no paid E2E proof |
 | **Mezo Explorer** | [Mezo Testnet Explorer](https://explorer.test.mezo.org/) | Live |
-| **Default Price** | `$0.001 MUSD` | `src/server.ts` |
+| **Proposed Example Price** | `$0.001 MUSD` | Demo configuration, not enabled for public payments |
 
 ---
 
