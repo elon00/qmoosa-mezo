@@ -1,0 +1,9 @@
+{
+    "network":  "Mezo Testnet (Matsnet)",
+    "chainId":  31611,
+    "deployer":  "0xbbaaD9B836f9bd61cD0d616a016Cc911A2E1f60D",
+    "musdToken":  "0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503",
+    "mezoSettlementAnchor":  "0xDfe883CB3D3359125D6c6f6B19ec2DcaD8B7edd8",
+    "deploymentTxHash":  "0x243c5febd1ea80f65522dd1c05436c37a429309a48a4b2bfdba20e783b9e1db2",
+    "explorerUrl":  "https://explorer.test.mezo.org/address/0xDfe883CB3D3359125D6c6f6B19ec2DcaD8B7edd8"
+}
