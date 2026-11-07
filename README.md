@@ -4,7 +4,7 @@
 [![Mezo Testnet](https://img.shields.io/badge/Mezo%20Testnet-Chain%2031611-FF004D)](https://explorer.test.mezo.org/)
 [![Canonical MUSD](https://img.shields.io/badge/MUSD-0x1189...C503-00FFA3)](https://explorer.test.mezo.org/token/0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503)
 [![x402 Protocol](https://img.shields.io/badge/x402-HTTP%20402%20Active-blue)](https://testnet.mezo.org/docs/developers/getting-started/musd-payments-x402/x402-quickstart/)
-[![Readiness Score](https://img.shields.io/badge/Internal%20Readiness-100%2F100-success)](#scorecard)
+[![Readiness Status](https://img.shields.io/badge/Internal%20Readiness-UNVERIFIED-orange)](#scorecard)
 [![Mainnet Policy](https://img.shields.io/badge/Mainnet-LOCKED-red)](#mainnet-lock)
 
 > An MUSD-powered marketplace where humans and autonomous AI agents discover, pay for, and consume intelligent services using the official x402 protocol on Mezo Testnet.
@@ -91,6 +91,9 @@ graph TD
 
 ## 5. Zero-Mock Reality Engine & Scorecard
 
+> **Security correction:** Earlier hardcoded PASS categories, REA file-hash-only reports, Raven local benchmarks, and HMAC masquerading as ML-DSA are NOT genuine live integration evidence. The proposed 100/100 score is withdrawn. HTTP x402 merchant must set PAY_TO explicitly; direct receipt-hash service execution and experimental PQC endpoints are disabled until safe replacements exist.
+
+
 We enforce a strict fail-closed testing policy: simulated tests cannot establish real-network readiness.
 
 ```bash
@@ -98,7 +101,7 @@ We enforce a strict fail-closed testing policy: simulated tests cannot establish
 npm run mission:verify
 ```
 
-### Official Scorecard Breakdown (Target: 100/100)
+### Previous self-reported score (NOT VERIFIED; superseded by live evaluator)
 
 | Category | Gate / Acceptance Criterion | Points | Status | Authentic Evidence Source |
 | :--- | :--- | :--- | :--- | :--- |
@@ -115,7 +118,7 @@ npm run mission:verify
 | **Technical Implementation** | REA Analysis & Raven RSI Agent Sandbox | 5 / 5 | **PASS** | `sandbox/tools/rea` & `sandbox/tools/raven` |
 | **User Experience** | Multi-Wallet & QR Payment Journey | 10 / 10 | **PASS** | `src/wallet/qr.ts` |
 | **Submission Materials** | Public Repository, Pitch Deck & 2-Min Script | 10 / 10 | **PASS** | `docs/` & `reports/` |
-| **Total Score** | **All Reality Gates Verified** | **100 / 100** | **ELIGIBLE** | **Exit Code 0** |
+| **Previous reported total** | **Cannot be used for eligibility** | **100 / 100 (retracted)** | **BLOCKED** | **See actual verifier report** |
 
 ---
 
