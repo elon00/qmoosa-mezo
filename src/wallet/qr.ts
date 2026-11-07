@@ -32,15 +32,20 @@ export class QRPaymentEngine {
     serviceId?: string,
     nonce?: string
   ): string {
-    if (!recipient.startsWith("0x") || recipient.length !== 42) {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(recipient) || /^0x0{40}$/i.test(recipient)) {
       throw new Error(`Invalid recipient address format: ${recipient}`);
     }
 
-    // Convert decimal string to 18-decimal wei string
-    const parts = amountMUSD.replace("$", "").trim().split(".");
-    const whole = parts[0] || "0";
-    const fraction = (parts[1] || "").padEnd(18, "0").slice(0, 18);
-    const amountWei = (BigInt(whole) * 10n ** 18n + BigInt(fraction)).toString();
+    // Reject excessive precision and malformed amounts rather than silently rounding.
+    const amount = amountMUSD.replace(/^\$/, "").trim();
+    if (!/^(0|[1-9][0-9]*)(\.[0-9]{1,18})?$/.test(amount)) {
+      throw new Error("Invalid MUSD amount or precision");
+    }
+    const [whole, decimal = ""] = amount.split(".");
+    const fraction = decimal.padEnd(18, "0");
+    const amountBigInt = BigInt(whole) * 10n ** 18n + BigInt(fraction);
+    if (amountBigInt <= 0n) throw new Error("Amount must be positive");
+    const amountWei = amountBigInt.toString();
 
     let uri = `ethereum:${MEZO_TESTNET_CONFIG.musdAddress}@${MEZO_TESTNET_CONFIG.id}/transfer?address=${recipient}&uint256=${amountWei}`;
     if (serviceId) {

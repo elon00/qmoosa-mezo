@@ -48,7 +48,7 @@ export class AgentPolicyEngine {
   }
 
   public getPolicy(agentId: string): AgentPolicyConfig | undefined {
-    return this.policies.get(agentId) ?? this.policies.get("agent_default");
+    return this.policies.get(agentId);
   }
 
   /**
@@ -75,6 +75,9 @@ export class AgentPolicyEngine {
     reason?: string;
     requiresManualApproval: boolean;
   } {
+    if (!Number.isFinite(amountMUSD) || amountMUSD <= 0) {
+      return { approved: false, reason: "Invalid, zero or non-finite amount", requiresManualApproval: false };
+    }
     const policy = this.getPolicy(agentId);
     if (!policy) {
       return { approved: false, reason: `No policy found for agent ${agentId}`, requiresManualApproval: false };

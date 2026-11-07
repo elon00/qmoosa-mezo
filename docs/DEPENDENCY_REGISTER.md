@@ -1,46 +1,23 @@
-# QMOOSA MEZO — Dependency Register
-**Target:** 100/100 Internal Readiness  
-**Audit Standard:** Supply Chain Integrity, License Compliance & Pinning  
+# QMOOSA Mezo — Dependency and supply-chain register
 
----
+**Status: BLOCKED. This table does not assert every installed dependency is safe.**
 
-## 1. Production Runtime Dependencies
+## Runtime dependencies
+`@x402/core`, `@x402/evm`, `@x402/express`, `@x402/paywall`, `viem`, `express`, `dotenv`, and `qrcode` are declared in `package.json`. Reproducible versions and transitive dependencies are governed by `package-lock.json`.
 
-| Package | Version Range | Installed | License | Purpose & Role |
-| :--- | :--- | :--- | :--- | :--- |
-| `@x402/core` | `^2.16.0` | `2.16.0` | MIT / Apache | Core x402 protocol interfaces, client/server models |
-| `@x402/evm` | `^2.16.0` | `2.16.0` | MIT / Apache | ExactEvmScheme implementation, chain definitions |
-| `@x402/express` | `^2.16.0` | `2.16.0` | MIT / Apache | Express middleware for payment intercept & challenge |
-| `@x402/paywall` | `^2.16.0` | `2.16.0` | MIT / Apache | Paywall UI bundle with EVM network support |
-| `express` | `^4.21.2` | `4.21.2` | MIT | Core HTTP application server |
-| `viem` | `^2.23.0` | `2.23.0` | MIT | EVM interaction, typed contracts, RPC calls |
-| `qrcode` | `^1.5.4` | `1.5.4` | MIT | QR code generation for mobile payments |
-| `dotenv` | `^16.4.7` | `16.4.7` | BSD-2-Clause | Environment configuration management |
+## Current factual audit
+GitHub Actions `npm audit --omit=dev --audit-level=high`, on the initial safety-remediation commit in November 2026, reported **19 high and 15 moderate** findings. The production dependency gate failed. It must not be bypassed with `|| true`, and `npm audit fix --force` may introduce breaking x402 compatibility changes.
 
----
+## Remediation strategy
+1. Regenerate the full dependency advisory tree and identify direct versus transitive ownership and affected methods.
+2. Assess compatible `@x402/*` updates against Mezo Testnet support and its canonical settlement scheme.
+3. Stage reviewed dependency + lockfile updates on a separate branch, not an unreviewed forced downgrade.
+4. Run `npm ci`, TypeScript build, complete unit and negative tests, live read-only network tests, and an isolated end-to-end testnet settlement verification.
+5. Remove unused packages only when features are safely disabled and no contract/API dependency remains.
+6. Archive an SBOM and package/license review; require 0 unresolved release-blocking high/critical issues prior to certification.
 
-## 2. Developer & Verification Dependencies
+## PQC dependency
+The attempted `@noble/post-quantum` import on the prior mainline lacked a consistent dependency/lockfile and broke TypeScript CI. Cryptographic interfaces are disabled pending a reviewed, tested installation. No FIPS compliance is claimed.
 
-| Package | Version Range | Installed | License | Purpose & Role |
-| :--- | :--- | :--- | :--- | :--- |
-| `typescript` | `^5.8.2` | `5.8.2` | Apache-2.0 | Type checking and compilation |
-| `tsx` | `^4.19.3` | `4.19.3` | MIT | Fast TypeScript script execution |
-| `@types/express` | `^4.17.21` | `4.17.21` | MIT | TypeScript type definitions for Express |
-| `@types/node` | `^22.13.0` | `22.13.0` | MIT | TypeScript type definitions for Node.js runtime |
-| `@types/qrcode` | `^1.5.5` | `1.5.5` | MIT | TypeScript type definitions for qrcode library |
-
----
-
-## 3. Analysis & Self-Improvement Subsystems (Sandbox)
-
-| Subsystem | Upstream Repository | Version | Commit SHA | License | Isolation Mode |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **REA Tools** | `morluto/rea` | `6.5.0` | `a732c859ddd005a0179854897a645b531bf163d3` | MIT | Read-Only MCP / Sandbox inspection |
-| **Raven RSI** | `EverMind-AI/Raven` | `0.2.4` | `6b938a4267cb1f3bf1453a39ccc7d580e0eea9fd` | Apache-2.0 | Isolated Agent Sandbox, Proposal-only |
-
----
-
-## 4. Supply Chain Security Verification
-- **Vulnerability Audit:** Evaluated via continuous reality gate.
-- **Transitive Lock:** Package-lock guarantees reproducible builds.
-- **Credential Segregation:** No private signing keys or production API tokens are bundled into client distributions or committed to repository.
+## Scheduled monitoring
+`.github/dependabot.yml` proposes reviewed security/dependency update PRs. `.github/workflows/codeql.yml` adds static analysis. Neither replaces independent review.

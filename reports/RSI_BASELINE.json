@@ -1,58 +1,11 @@
 {
-  "framework": "Raven RSI Multi-Agent Engine",
-  "version": "0.2.4",
-  "upstreamRepo": "https://github.com/EverMind-AI/Raven",
-  "pinnedCommit": "6b938a4267cb1f3bf1453a39ccc7d580e0eea9fd",
-  "sandboxAvailable": true,
-  "timestamp": "2026-10-14T19:56:37.538Z",
-  "metrics": {
-    "falseAcceptanceRate": 0,
-    "falseRejectionRate": 0,
-    "pqcSignAndVerifyMs": 10.238800000000083,
-    "conwayAvgStepMs": 0.11774000000001252,
-    "agentPolicyEvaluationMs": 0.007369999999996253,
-    "qrParseAndValidateMs": 1.0051999999996042
-  },
-  "subagents": [
-    {
-      "name": "Research Agent",
-      "role": "Mezo & x402 Technical Protocol Research",
-      "status": "READY"
-    },
-    {
-      "name": "Code Agent",
-      "role": "Narrowly Scoped Patch Implementation",
-      "status": "READY"
-    },
-    {
-      "name": "Test Agent",
-      "role": "Lane 1 & Lane 2 Reality Test Execution",
-      "status": "READY"
-    },
-    {
-      "name": "Security Agent",
-      "role": "Budget & Threat Model Audit",
-      "status": "READY"
-    },
-    {
-      "name": "Mezo Agent",
-      "role": "Testnet RPC & MUSD State Verification",
-      "status": "READY"
-    },
-    {
-      "name": "PQC Agent",
-      "role": "NIST FIPS 204 ML-DSA Verification",
-      "status": "READY"
-    },
-    {
-      "name": "On-Call Agent",
-      "role": "Failure Triage & Minimal Hotfixes",
-      "status": "READY"
-    },
-    {
-      "name": "Independent Evaluation Agent",
-      "role": "Gate Threshold & Benchmark Auditing",
-      "status": "READY"
-    }
-  ]
+  "status": "RETRACTED_HISTORICAL_EVIDENCE",
+  "releaseEligible": false,
+  "productionCertified": false,
+  "mainnetStatus": "LOCKED",
+  "actualLiveRunVerified": false,
+  "originalFile": "reports/RSI_BASELINE.json",
+  "reason": "Historical self-reported or synthetic PASS/100 scores lacked independent real-world evidence. This file must not be used as proof of settlement, PQC, REA/Raven, or readiness.",
+  "action": "Re-run current commit-specific CI, inspect execution artifacts, and satisfy docs/GLOBAL_PRODUCTION_BLUEPRINT.md gates",
+  "supersededBy": "https://github.com/elon00/qmoosa-mezo/pull/5"
 }

@@ -3,6 +3,8 @@ name: "QMOOSA MEZO — Continuous Delivery Preview & Smoke Test"
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -27,6 +29,11 @@ jobs:
         run: npm run build
 
       - name: "Start QMOOSA MEZO Gateway (Background Service)"
+        env:
+          # CI-only testnet non-receiving address. Never pay or use in production.
+          PAY_TO: "0x000000000000000000000000000000000000dEaD"
+          CI: "true"
+          ENABLE_CI_X402_PROBE: "true"
         run: |
           PORT=4021 npx tsx src/server.ts &
           echo "SERVER_PID=$!" >> $GITHUB_ENV
@@ -66,6 +73,20 @@ jobs:
           echo "Testing POST /api/conway/step..."
           curl -f -s -X POST http://localhost:4021/api/conway/step | grep '"entropyHash":'
           echo "PASS: Conway automaton computed deterministic state step."
+
+      - name: "Smoke Test 6: Unsafe Paid Execution Must Remain Disabled"
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "content-type: application/json" \
+            -d '{"prompt":"test","receiptTxHash":"0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}' \
+            http://localhost:4021/api/bazaar/qmoosa-fast-inference/execute)
+          test "$code" = "503"
+
+      - name: "Smoke Test 7: Receipts And PQC Must Fail Closed"
+        run: |
+          test "$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4021/api/receipts)" = "403"
+          test "$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:4021/api/pqc/keygen)" = "503"
+          test "$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:4021/api/settlement/verify)" = "503"
 
       - name: "Clean Teardown of Test Server"
         if: always()
