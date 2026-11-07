@@ -1,75 +1,146 @@
 {
-  "tool": "REA (Reverse Engineer Anything)",
-  "version": "6.5.0",
-  "upstreamRepo": "https://github.com/morluto/rea",
-  "pinnedCommit": "a732c859ddd005a0179854897a645b531bf163d3",
-  "reaSandboxAvailable": true,
-  "inspectionTimestamp": "2026-10-14T19:56:37.504Z",
-  "auditScope": "QMOOSA MEZO Autonomous Hub Core Codebase",
-  "analyzedComponents": [
-    {
-      "component": "Server Entrypoint",
-      "filePath": "src/server.ts",
-      "exists": true,
-      "sha256": "258379f6ed34522992782fd9d49a406c0162c6c7a4e41e2a876994af2b0b39dd",
-      "lineCount": 286,
-      "status": "VERIFIED"
+  "engine": "REA_Reverse_Engineer_Anything",
+  "status": "STRUCTURE_RECONSTRUCTED",
+  "analyzed_files": 46,
+  "manifest": {
+    "foundry.toml": {
+      "bytes": 214
     },
-    {
-      "component": "Conway State Machine",
-      "filePath": "src/core/conway.ts",
-      "exists": true,
-      "sha256": "861fbc38ed95ca888a60d4c8d7cb9ace5294fbbcf65ecc6de2e47a6eb3df197f",
-      "lineCount": 247,
-      "status": "VERIFIED"
+    "package-lock.json": {
+      "bytes": 435035
     },
-    {
-      "component": "NIST FIPS 204 ML-DSA",
-      "filePath": "src/crypto/mldsa.ts",
-      "exists": true,
-      "sha256": "babbab337d149f173668e3676e01caa67f8ba591e1d2f3b5e816620c25f804a3",
-      "lineCount": 202,
-      "status": "VERIFIED"
+    "package.json": {
+      "bytes": 1304
     },
-    {
-      "component": "DeFi & Mezo MUSD Config",
-      "filePath": "src/defi/vault.ts",
-      "exists": true,
-      "sha256": "cbe8ff804fbd4e07a67758c78e836953cdc4e26072fc78e4f1555491fb667107",
-      "lineCount": 137,
-      "status": "VERIFIED"
+    "README.md": {
+      "bytes": 8870
     },
-    {
-      "component": "x402 Settlement Verifier",
-      "filePath": "src/x402/settlement.ts",
-      "exists": true,
-      "sha256": "b29d059e8669c1fd193d85438ab19cb9aa3fb1cece3eafbfa8cbe79082660cfa",
-      "lineCount": 185,
-      "status": "VERIFIED"
+    "tsconfig.json": {
+      "bytes": 411
     },
-    {
-      "component": "Agent Policy Engine",
-      "filePath": "src/agents/policy.ts",
-      "exists": true,
-      "sha256": "88579d5560394d2669ac5b20dcff69e7e79d213610e636536fa700fc85f6410e",
-      "lineCount": 149,
-      "status": "VERIFIED"
+    "tsconfig.server.json": {
+      "bytes": 142
     },
-    {
-      "component": "QR Payment Engine",
-      "filePath": "src/wallet/qr.ts",
-      "exists": true,
-      "sha256": "838f097c48e327840e5d5c53b107221296bcff099068b3914ca81502e92c75c5",
-      "lineCount": 122,
-      "status": "VERIFIED"
+    "contracts\\MezoSettlementAnchor.sol": {
+      "bytes": 2619
+    },
+    "deployments\\mezo-31611.json": {
+      "bytes": 477
+    },
+    "docs\\ARCHITECTURE.md": {
+      "bytes": 4488
+    },
+    "docs\\BASELINE_AUDIT.md": {
+      "bytes": 3386
+    },
+    "docs\\BUILDATHON_SUBMISSION.md": {
+      "bytes": 3888
+    },
+    "docs\\DEPENDENCY_REGISTER.md": {
+      "bytes": 2509
+    },
+    "docs\\PITCH_SCRIPT_2MIN.md": {
+      "bytes": 3374
+    },
+    "docs\\PRODUCT_DECK.md": {
+      "bytes": 5611
+    },
+    "docs\\RAVEN_RSI_SETUP.md": {
+      "bytes": 2550
+    },
+    "docs\\REA_INTEGRATION.md": {
+      "bytes": 1885
+    },
+    "docs\\RSI_EXPERIMENT_PROTOCOL.md": {
+      "bytes": 2103
+    },
+    "docs\\SECURITY_MODEL.md": {
+      "bytes": 2668
+    },
+    "reports\\BASELINE.json": {
+      "bytes": 2017
+    },
+    "reports\\READINESS_REPORT.json": {
+      "bytes": 8411
+    },
+    "reports\\REA_ANALYSIS.json": {
+      "bytes": 2413
+    },
+    "reports\\RSI_BASELINE.json": {
+      "bytes": 1579
+    },
+    "reports\\RSI_EXPERIMENTS.json": {
+      "bytes": 650
+    },
+    "sandbox\\README.md": {
+      "bytes": 562
+    },
+    "scripts\\mission_verify.ts": {
+      "bytes": 3390
+    },
+    "scripts\\raven_experiment.ts": {
+      "bytes": 5436
+    },
+    "scripts\\reality_gate.ts": {
+      "bytes": 17670
+    },
+    "scripts\\rea_analysis.ts": {
+      "bytes": 3002
+    },
+    "scripts\\rea_inspector.py": {
+      "bytes": 1485
+    },
+    "scripts\\rsi_engine.py": {
+      "bytes": 2039
+    },
+    "src\\server.ts": {
+      "bytes": 9491
+    },
+    ".github\\workflows\\deploy_preview.yml": {
+      "bytes": 2641
+    },
+    ".github\\workflows\\qmoosa-rsi-rea-sync.yml": {
+      "bytes": 531
+    },
+    ".github\\workflows\\reality_ci.yml": {
+      "bytes": 5367
+    },
+    "src\\agents\\policy.ts": {
+      "bytes": 4599
+    },
+    "src\\core\\conway.ts": {
+      "bytes": 7392
+    },
+    "src\\crypto\\mldsa.ts": {
+      "bytes": 1140
+    },
+    "src\\defi\\vault.ts": {
+      "bytes": 4241
+    },
+    "src\\marketplace\\catalog.ts": {
+      "bytes": 3978
+    },
+    "src\\wallet\\qr.ts": {
+      "bytes": 4090
+    },
+    "src\\x402\\settlement.ts": {
+      "bytes": 5988
+    },
+    "tests\\lane1\\agent_policy.test.ts": {
+      "bytes": 2505
+    },
+    "tests\\lane1\\conway.test.ts": {
+      "bytes": 4677
+    },
+    "tests\\lane1\\pqc.test.ts": {
+      "bytes": 3576
+    },
+    "tests\\lane1\\qr_wallet.test.ts": {
+      "bytes": 2713
+    },
+    "tests\\lane2\\reality_network.test.ts": {
+      "bytes": 4164
     }
-  ],
-  "securityFindings": [],
-  "conclusions": {
-    "zeroMockCompliance": true,
-    "x402EVMIntegrationPresent": true,
-    "pqcMLDSAPresent": true,
-    "conwayAutomatonPresent": true,
-    "mainnetLocked": true
-  }
+  },
+  "timestamp": 1794023522
 }
