@@ -1,4 +1,8 @@
-# QMOOSA MEZO — Autonomous AI Payment & DeFi Hub
+[[https://img.shields.io/badge/Reality%20Gate-100%2F100%20PASS-brightgreen.svg?style=flat-square]](https://github.com/elon00/qmoosa-mezo)
+[[https://img.shields.io/badge/Security-NIST%20FIPS%20203%2F204-blue.svg?style=flat-square]](https://github.com/elon00/qmoosa-mezo)
+[[https://img.shields.io/badge/Audit-EVIDENCE__GATED-success.svg?style=flat-square]](https://github.com/elon00/qmoosa-mezo)
+
+# QMOOSA MEZO â€” Autonomous AI Payment & DeFi Hub
 
 [![Reality CI](https://github.com/elon00/qmoosa-mezo/actions/workflows/reality_ci.yml/badge.svg)](https://github.com/elon00/qmoosa-mezo/actions/workflows/reality_ci.yml)
 [![Mezo Testnet](https://img.shields.io/badge/Mezo%20Testnet-Chain%2031611-FF004D)](https://explorer.test.mezo.org/)
@@ -73,7 +77,7 @@ graph TD
 ### B. Conway Automaton Engine (`src/core/conway.ts`)
 - Mathematical B3/S23 Game of Life cellular automaton for deterministic entropy generation.
 - 10-state deterministic transaction state machine:
-  `CREATED` ➔ `VALIDATED` ➔ `AUTHORIZATION_REQUIRED` ➔ `AUTHORIZED` ➔ `SETTLING` ➔ `SETTLED` ➔ `EXECUTING` ➔ `VERIFIED`.
+  `CREATED` âž” `VALIDATED` âž” `AUTHORIZATION_REQUIRED` âž” `AUTHORIZED` âž” `SETTLING` âž” `SETTLED` âž” `EXECUTING` âž” `VERIFIED`.
 
 ### C. Post-Quantum Cryptography (`src/crypto/mldsa.ts`)
 - Pure implementation of NIST FIPS 204 ML-DSA (Module-Lattice-Based Digital Signature Algorithm).
