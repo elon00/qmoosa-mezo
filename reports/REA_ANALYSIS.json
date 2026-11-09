@@ -1,6 +1,5 @@
 {
-  "engine": "REA_Reverse_Engineer_Anything",
-  "status": "STRUCTURE_RECONSTRUCTED",
-  "analyzed_files": 47,
-  "timestamp": 1794219285
+  "engine": "REA_Inspector",
+  "timestamp": 1794246964,
+  "total_files": 48
 }
