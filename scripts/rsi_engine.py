@@ -4,7 +4,7 @@ Reference: https://github.com/EverMind-AI/Raven
 Workflow: OBSERVE -> DIAGNOSE -> PROPOSE -> PATCH -> TEST -> REVIEW -> APPROVE
 Enforces fail-closed boundary: no unreviewed production deployments or key escalations.
 """
-import hashlib, json, os, subprocess, sys, time
+import json, os, sys, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -20,8 +20,7 @@ class RavenRSIController:
         return {
             "timestamp": int(time.time()),
             "source_file_count": len(src_files),
-            "test_file_count": len(test_files),
-            "git_commit": os.popen("git rev-parse HEAD 2>/dev/null").read().strip() or "LOCAL_UNCOMMITTED"
+            "test_file_count": len(test_files)
         }
 
     def diagnose(self, telemetry):

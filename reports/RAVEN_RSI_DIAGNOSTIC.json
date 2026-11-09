@@ -2,10 +2,9 @@
   "engine": "Raven_RSI_Autonomic_Controller",
   "lifecycle": "OBSERVE_AND_BENCHMARK",
   "telemetry": {
-    "timestamp": 1794023523,
+    "timestamp": 1794219199,
     "source_file_count": 9,
-    "test_file_count": 5,
-    "git_commit": "LOCAL_UNCOMMITTED"
+    "test_file_count": 5
   },
   "diagnostic": {
     "status": "HEALTHY",

@@ -3,7 +3,7 @@ QMOOSA REA (Reverse Engineer Anything) Structural Code & Binary Inspector.
 Reference: https://github.com/morluto/rea
 Performs static code discovery, invariant checks, and interface reconstruction.
 """
-import hashlib, json, os, sys, time
+import json, os, sys, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -18,17 +18,15 @@ class ReaAnalyzer:
         for p in ROOT.rglob("*"):
             if any(part.startswith(".") for part in p.parts if part not in (".github",)):
                 continue
-            if "node_modules" in p.parts or "target" in p.parts or "__pycache__" in p.parts:
+            if any(x in p.parts for x in ["node_modules", "target", "__pycache__"]):
                 continue
             if p.is_file():
-                rel = str(p.relative_to(ROOT))
-                tree[rel] = {"bytes": p.stat().st_size}
+                tree[str(p.relative_to(ROOT))] = p.stat().st_size
 
         record = {
             "engine": "REA_Reverse_Engineer_Anything",
             "status": "STRUCTURE_RECONSTRUCTED",
             "analyzed_files": len(tree),
-            "manifest": tree,
             "timestamp": int(time.time())
         }
         with open(self.reports_dir / "REA_ANALYSIS.json", "w", encoding="utf-8") as f:
@@ -37,4 +35,4 @@ class ReaAnalyzer:
         return 0
 
 if __name__ == "__main__":
-    sys.exit(ReaAnalyzer().run_cycle() if hasattr(ReaAnalyzer(), 'run_cycle') else ReaAnalyzer().analyze())
+    sys.exit(ReaAnalyzer().analyze())
