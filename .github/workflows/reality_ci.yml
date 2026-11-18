@@ -71,7 +71,7 @@ jobs:
         run: npm run mission:verify
 
       - name: "Publish Verification Reports as Artifacts"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: readiness-reports-node-${{ matrix.node-version }}
