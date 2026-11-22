@@ -52,6 +52,28 @@ async function main() {
     console.log("\n--> [Step 5/5] Evaluating Reality Gates & Final Buildathon Scorecard...");
     const scorecard = await evaluateRealityGates();
 
+    const blocked = scorecard.gateResults.filter(g => g.status !== "PASS");
+    const reportLines = [
+      "# QMOOSA MEZO — Evidence-based readiness",
+      "",
+      `**Score: ${scorecard.totalScore}/${scorecard.maxScore} (internal only)**`,
+      `**Release eligible: ${scorecard.releaseEligible ? "YES" : "NO"}**`,
+      "**Mainnet: LOCKED**",
+      "",
+      "| Gate | Status | Points | Evidence required |",
+      "|---|---|---:|---|",
+      ...scorecard.gateResults.map(g =>
+        `| ${g.gateId} | ${g.status} | ${g.awardedPoints}/${g.allocatedPoints} | ${g.status === "PASS" ? "Readiness verifier PASS" : "Independent execution and proof still required"} |`),
+      "",
+      `**Outstanding gates:** ${blocked.length}`,
+      "",
+      "This report is not an official Mezo judging score. Unit-test success is not proof of live MUSD settlement."
+    ];
+    fs.mkdirSync("reports", { recursive: true });
+    fs.writeFileSync("reports/READINESS_SUMMARY.md", reportLines.join("\n") + "\n");
+    for (const g of blocked) {
+      console.error(`BLOCKED: ${g.gateId} (${g.allocatedPoints} points) — ${g.name}`);
+    }
     const elapsedSeconds = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`\nVerification pipeline completed in ${elapsedSeconds}s.`);
 

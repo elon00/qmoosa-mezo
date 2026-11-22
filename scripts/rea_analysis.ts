@@ -46,7 +46,7 @@ export async function runREAAnalysis() {
       exists,
       sha256: hash,
       lineCount,
-      status: exists ? "VERIFIED" : "MISSING"
+      status: exists ? "SOURCE_PRESENT_ONLY" : "MISSING"
     };
   });
 
@@ -59,11 +59,12 @@ export async function runREAAnalysis() {
     inspectionTimestamp: new Date().toISOString(),
     auditScope: "QMOOSA MEZO Autonomous Hub Core Codebase",
     analyzedComponents,
-    securityFindings: [],
+    securityFindings: ["No actual REA invocation is performed by this script; source hashes are not an audit."],
+    actualREARunVerified: false,
     conclusions: {
-      zeroMockCompliance: true,
+      zeroMockCompliance: false,
       x402EVMIntegrationPresent: true,
-      pqcMLDSAPresent: true,
+      pqcMLDSAPresent: false,
       conwayAutomatonPresent: true,
       mainnetLocked: true
     }
